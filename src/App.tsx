@@ -1,35 +1,70 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
+/*type Feedback = {
+  name: string;
+  message: string;
+  timestamp: string;
+};*/
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [submittedName, setSubmittedName] = useState("");
+  const [submittedMessage, setSubmittedMessage] = useState("");
+  const [timestamp, setTimestamp] = useState("");
+  
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+  };
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setMessage(e.target.value);
+  };
+
+   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
+    // estää sivun uudelleen latauksen / refresh -toiminnon. 
+    // KÄYTETÄÄN AINA FORM -LOMAKKEISSA.
+    if (!name.trim() || !message.trim()) {
+      alert("Täytä molemmat kentät!");
+      return;
+    }
+
+    setSubmittedName(name);
+    setSubmittedMessage(message);
+    setTimestamp(new Date().toLocaleString());
+
+    setName("");
+    setMessage("");
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+    <form onSubmit={handleSubmit}>
+      <input 
+      placeholder="Your name"
+      value={name}
+      onChange={handleNameChange}
+      />
+      <br />
+      <textarea 
+      placeholder="Your feedback"
+      value={message}
+      onChange={handleMessageChange}
+      />
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+
+    {submittedName && submittedMessage&& (
+        <div>
+          <p><strong>{submittedName}</strong> ({timestamp})</p>
+          <p>{submittedMessage}</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default App
